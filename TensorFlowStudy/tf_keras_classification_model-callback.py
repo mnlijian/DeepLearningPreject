@@ -87,8 +87,16 @@ model.compile(loss='sparse_categorical_crossentropy',
 logdir = './callbacks'
 if not os.path.exists(logdir):
     os.mkdir(logdir)
+
 output_model_file = os.path.join(logdir,"fashion_mnist_model.h5")
 
+callbacks =[
+    keras.callbacks.TensorBoard(logdir),
+    keras.callbacks.ModelCheckpoint(output_model_file,save_best_only=True),
+    keras.callbacks.EarlyStopping(patience=5, min_delta=1e-3),
 
+]
 
-
+history = model.fit(x_train_scaled,y_train, epochs=10,
+            validation_data=(x_valid_scaled,y_valid),
+            callbacks = callbacks)
